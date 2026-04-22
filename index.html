@@ -1,68 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
- 
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>LTM Custom Github webpages</title>
- 
-  <!-- Adobe Web SDK base code -->
+
+<!-- Adobe Web SDK base code -->
 <script>
-    !function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),n[o]=function(){var u=arguments;return new Promise(function(i,l){n.setTimeout(function(){n[o].q.push([i,l,u])})})},n[o].q=[])})}(window,["alloy"]);
+  !function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),n[o]=function(){var u=arguments;return new Promise(function(i,l){n.setTimeout(function(){n[o].q.push([i,l,u])})})},n[o].q=[])})}(window,["alloy"]);
 </script>
- 
-  <!-- Adobe Web SDK library -->
+
+<!-- Adobe Web SDK library -->
 <script src="https://cdn1.adoberesources.net/alloy/2.19.1/alloy.js" async></script>
- 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 24px;
-      background: #f5f5f5;
-    }
- 
-    .page {
-      max-width: 900px;
-      margin: 0 auto;
-      background: white;
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    }
- 
-    #hero-banner {
-      margin-top: 20px;
-      padding: 24px;
-      border: 2px dashed #999;
-      border-radius: 12px;
-      min-height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: bold;
-      background: #fafafa;
-    }
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 24px;
+    background: #f5f5f5;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  #hero-banner {
+    margin-top: 20px;
+    padding: 24px;
+    border: 2px dashed #999;
+    border-radius: 12px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fafafa;
+  }
+
+  .offer-card {
+    width: 100%;
+    max-width: 720px;
+    display: grid;
+    gap: 12px;
+    padding: 20px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #111827, #1f2937);
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  .offer-card h2 {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .offer-card p {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #e5e7eb;
+  }
+
+  .offer-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: #cbd5e1;
+  }
+
+  .offer-cta {
+    justify-self: start;
+    border: 0;
+    border-radius: 999px;
+    padding: 12px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #ffffff;
+    color: #111827;
+  }
+
+  .fallback {
+    color: #6b7280;
+    font-size: 18px;
+    text-align: center;
+  }
 </style>
 </head>
- 
+
 <body>
- 
   <div class="page">
-<h1>LTM Adobe Learning</h1>
-<p>This page is ready for an AJO code-based experience surface.</p>
- 
+    <h1>LTM Adobe Learning</h1>
+    <p>This page is ready for an AJO code-based experience surface.</p>
+
     <!-- Surface -->
-<div id="hero-banner">Default Hero Banner Content</div>
-</div>
- 
+    <div id="hero-banner">
+      <div class="fallback">Default Hero Banner Content</div>
+    </div>
+  </div>
+
   <script>
     const surface = "web://kaaru-ltm.github.io/ltm-adobe-learning/#hero-banner";
- 
+    const datastreamId = "05f47576-a9ad-44fd-b5bd-3064f60af590";
+    const orgId = "795D95DA5745973C7F000101@AdobeOrg";
+
+    let lastProposition = null;
+
     function sendDisplayEvent(proposition) {
       const { id, scope, scopeDetails = {} } = proposition;
- 
+
       return alloy("sendEvent", {
         xdm: {
           eventType: "decisioning.propositionDisplay",
@@ -80,44 +133,83 @@
         }
       });
     }
- 
-    function applyPersonalization(response) {
-      const hero = document.getElementById("hero-banner");
-      if (!hero) return [];
- 
-      const propositions = response?.propositions || [];
-      const rendered = [];
- 
-      for (const proposition of propositions) {
-        const items = proposition.items || [];
- 
-        const htmlItem = items.find(item =>
-          item.schema === "https://ns.adobe.com/personalization/html-content-item" ||
-          Boolean(item.data?.content)
-        );
- 
-        if (htmlItem) {
-          const content = htmlItem.data?.content || htmlItem.content || "";
- 
-          if (content) {
-            hero.innerHTML = content;
-            rendered.push(proposition);
-            break;
+
+    function sendInteractEvent(proposition) {
+      const { id, scope, scopeDetails = {} } = proposition;
+
+      return alloy("sendEvent", {
+        xdm: {
+          eventType: "decisioning.propositionInteract",
+          _experience: {
+            decisioning: {
+              propositions: [
+                {
+                  id,
+                  scope,
+                  scopeDetails
+                }
+              ]
+            }
           }
         }
-      }
- 
-      return rendered;
+      });
     }
- 
+
+    function getDecisionData(response) {
+      const propositions = response?.propositions || [];
+      for (const proposition of propositions) {
+        const item = proposition?.items?.[0];
+        const data = item?.data;
+        if (data) {
+          return { proposition, data };
+        }
+      }
+      return null;
+    }
+
+    function renderOffer(data, proposition) {
+      const hero = document.getElementById("hero-banner");
+      if (!hero) return;
+
+      const title = data.title || "Special Offer!";
+      const discount = data.discount ?? "";
+      const offerCode = data.amex_offerCode || "";
+      const segment = data.segment || "";
+      const cta = data.cta || "Shop Now";
+
+      hero.innerHTML = `
+        <div class="offer-card">
+          <h2>${title}</h2>
+          <p>Enjoy ${discount}% off on your next purchase</p>
+          <div class="offer-meta">
+            ${offerCode ? `<span>Offer Code: ${offerCode}</span>` : ""}
+            ${segment ? `<span>Segment: ${segment}</span>` : ""}
+          </div>
+          <button class="offer-cta" id="hero-offer-cta" type="button">${cta}</button>
+        </div>
+      `;
+
+      const ctaButton = document.getElementById("hero-offer-cta");
+      if (ctaButton && proposition) {
+        ctaButton.addEventListener("click", async () => {
+          try {
+            await sendInteractEvent(proposition);
+            console.log("Offer click tracked.");
+          } catch (error) {
+            console.error("Interact tracking error:", error);
+          }
+        });
+      }
+    }
+
     window.addEventListener("load", async () => {
       try {
         await alloy("configure", {
-          datastreamId: "9788be4b-6d69-444b-92e7-481021ea9c34",
-          orgId: "795D95DA5745973C7F000101@AdobeOrg",
+          datastreamId,
+          orgId,
           debugEnabled: true
         });
- 
+
         const response = await alloy("sendEvent", {
           renderDecisions: true,
           personalization: {
@@ -133,18 +225,18 @@
             }
           }
         });
- 
-        const renderedPropositions = applyPersonalization(response);
- 
-        for (const proposition of renderedPropositions) {
-          await sendDisplayEvent(proposition);
-        }
- 
+
+        const decision = getDecisionData(response);
+        if (!decision) return;
+
+        lastProposition = decision.proposition;
+        renderOffer(decision.data, decision.proposition);
+
+        await sendDisplayEvent(decision.proposition);
       } catch (error) {
         console.error("Web SDK error:", error);
       }
     });
-</script>
- 
+  </script>
 </body>
 </html>
