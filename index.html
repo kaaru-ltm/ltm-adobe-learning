@@ -60,36 +60,27 @@ function sendDisplayEvent(proposition) {
 }
  
 function applyPersonalization(response) {
-
   const hero = document.getElementById("hero-banner");
- 
   const proposition = response?.propositions?.[0];
-
-  const data = proposition?.items?.[0]?.data;
- 
-  console.log("Campaign data:", data);
- 
-  if (!data) {
-
-    hero.innerHTML = "No campaign content returned";
-
+  const item = proposition?.items?.[0];
+  const content = item?.data?.content;
+  console.log("FINAL DATA:", content);
+  if (!content) {
+    hero.innerHTML = "No content returned";
     return null;
-
   }
- 
   hero.innerHTML = `
 <div style="padding:20px;background:#111;color:#fff;border-radius:12px;">
-<h2>${data.title}</h2>
-<p>${data.message}</p>
-<p><b>Code:</b> ${data.offerCode}</p>
-<button id="cta">${data.cta}</button>
+<h2>${content.title}</h2>
+<p>${content.message}</p>
+<p><b>Code:</b> ${content.offerCode}</p>
+<button>${content.cta}</button>
 </div>
-
   `;
- 
   return proposition;
-
 }
+ 
+
  
 window.addEventListener("load", async () => {
 
