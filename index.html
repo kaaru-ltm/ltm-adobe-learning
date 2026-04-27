@@ -96,22 +96,44 @@ window.addEventListener("load", async () => {
 
     });
 
-   const response = await alloy("sendEvent", {
-renderDecisions: true,
-personalization: {
-surfaces: [surface]
-},
-xdm: {
-identityMap: {
-crmId: [
-{
-id: "C3001", // test user
-authenticatedState: "authenticated",
-primary: true
-}
-]
-}
-}
+   alloy("sendEvent", {
+
+  renderDecisions: true,
+
+  personalization: {
+
+    surfaces: [surface]
+
+  },
+
+  xdm: {
+
+    identityMap: {
+
+      crmId: [
+
+        {
+
+          id: "C3001",
+
+          authenticatedState: "authenticated",
+
+          primary: true
+
+        }
+
+      ]
+
+    },
+
+    _mindtree_apac: {
+
+      amex_customerId: "C3001"
+
+    }
+
+  }
+
 });
  
     const proposition = applyPersonalization(response);
