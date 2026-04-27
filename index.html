@@ -95,18 +95,24 @@ window.addEventListener("load", async () => {
       debugEnabled: true
 
     });
- 
-    const response = await alloy("sendEvent", {
 
-      renderDecisions: true,
-
-      personalization: {
-
-        surfaces: [surface]
-
-      }
-
-    });
+   const response = await alloy("sendEvent", {
+renderDecisions: true,
+personalization: {
+surfaces: [surface]
+},
+xdm: {
+identityMap: {
+crmId: [
+{
+id: "C3001", // test user
+authenticatedState: "authenticated",
+primary: true
+}
+]
+}
+}
+});
  
     const proposition = applyPersonalization(response);
  
