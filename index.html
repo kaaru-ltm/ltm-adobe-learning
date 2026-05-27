@@ -4,537 +4,81 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>LTM Adobe Learning — Platinum Upgrade</title>
-
-<!-- Web SDK base -->
 <script>
 !function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),n[o]=function(){var u=arguments;return new Promise(function(i,l){n.setTimeout(function(){n[o].q.push([i,l,u])})})},n[o].q=[])})}(window,["alloy"]);
 </script>
-
-<!-- Web SDK -->
 <script src="https://cdn1.adoberesources.net/alloy/2.19.1/alloy.js" async></script>
-
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #0a0a1a; color: #fff; min-height: 100vh; }
-
-  /* Header */
-  .header {
-    background: linear-gradient(135deg, #1a1a2e, #16213e);
-    padding: 16px 24px;
-    display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 2px solid #d4af37;
-  }
-  .header h1 { font-size: 20px; color: #d4af37; }
-  .header .logo { font-weight: bold; color: #fff; font-size: 14px; }
-
-  /* Persona Selector */
-  .persona-bar {
-    background: #16213e;
-    padding: 12px 24px;
-    display: flex; align-items: center; gap: 12px;
-    border-bottom: 1px solid #333;
-  }
-  .persona-bar label { color: #aaa; font-size: 13px; }
-  .persona-bar select {
-    background: #1a1a2e; color: #d4af37; border: 1px solid #d4af37;
-    padding: 8px 16px; border-radius: 6px; font-size: 13px; cursor: pointer;
-  }
-  .persona-bar .status {
-    margin-left: auto; font-size: 12px; color: #666;
-    padding: 6px 12px; border-radius: 20px; background: #111;
-  }
-  .persona-bar .status.connected { color: #2ecc71; border: 1px solid #2ecc71; }
-  .persona-bar .status.loading { color: #f39c12; border: 1px solid #f39c12; }
-  .persona-bar .status.error { color: #e74c3c; border: 1px solid #e74c3c; }
-
-  /* Main Content */
-  .page { max-width: 960px; margin: 24px auto; padding: 0 24px; }
-
-  /* Welcome Card */
-  .welcome-card {
-    background: linear-gradient(135deg, #16213e, #1a1a2e);
-    border: 1px solid #333; border-radius: 12px;
-    padding: 24px; margin-bottom: 24px;
-  }
-  .welcome-card h2 { color: #d4af37; margin-bottom: 8px; }
-  .welcome-card p { color: #aaa; font-size: 14px; }
-
-  /* Hero Banner — Offer Area */
-  #hero-banner {
-    margin-top: 0;
-    padding: 0;
-    border: 2px dashed #333;
-    border-radius: 16px;
-    min-height: 200px;
-    display: flex; align-items: center; justify-content: center;
-    background: #111;
-    color: #666;
-    font-size: 16px;
-    transition: all 0.5s ease;
-    overflow: hidden;
-  }
-
-  /* Offer Popup Styles */
-  .offer-card {
-    width: 100%; padding: 32px;
-    background: linear-gradient(135deg, #1a1a2e 0%, #0d1b2a 50%, #1b2a4a 100%);
-    border-radius: 14px; text-align: center;
-    position: relative; overflow: hidden;
-  }
-  .offer-card::before {
-    content: ''; position: absolute; top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
-    animation: shimmer 3s ease-in-out infinite;
-  }
-  @keyframes shimmer { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(180deg); } }
-
-  .offer-card .badge {
-    display: inline-block;
-    background: linear-gradient(135deg, #d4af37, #b8860b);
-    color: #1a1a2e; font-weight: bold; font-size: 11px;
-    padding: 4px 16px; border-radius: 20px;
-    text-transform: uppercase; letter-spacing: 1px;
-    margin-bottom: 16px;
-  }
-  .offer-card h2 {
-    color: #d4af37; font-size: 22px; margin-bottom: 8px;
-    position: relative;
-  }
-  .offer-card .greeting { color: #8ecae6; font-size: 15px; margin-bottom: 16px; }
-
-  .offer-message-box {
-    background: rgba(212,175,55,0.08);
-    border: 1px solid rgba(212,175,55,0.2);
-    border-radius: 10px; padding: 20px; margin: 16px 0;
-    position: relative;
-  }
-  .offer-message-box p { color: #e0e0e0; font-size: 15px; line-height: 1.6; }
-
-  .offer-meta {
-    display: flex; justify-content: center; gap: 24px;
-    margin: 16px 0; flex-wrap: wrap;
-  }
-  .offer-meta span {
-    font-size: 12px; color: #888;
-    padding: 4px 12px; background: rgba(255,255,255,0.05);
-    border-radius: 6px;
-  }
-  .offer-meta span b { color: #d4af37; }
-
-  .offer-actions { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
-  .btn-learn {
-    background: linear-gradient(135deg, #d4af37, #b8860b);
-    color: #1a1a2e; font-weight: bold; font-size: 14px;
-    padding: 12px 32px; border: none; border-radius: 8px;
-    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .btn-learn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(212,175,55,0.4); }
-  .btn-close {
-    background: transparent; color: #d4af37;
-    font-size: 14px; padding: 12px 32px;
-    border: 1px solid rgba(212,175,55,0.4); border-radius: 8px;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .btn-close:hover { border-color: #d4af37; background: rgba(212,175,55,0.1); }
-
-  .offer-brand { color: #555; font-size: 12px; margin-top: 16px; }
-
-  /* No Offer State */
-  .no-offer { text-align: center; padding: 40px; }
-  .no-offer h3 { color: #555; margin-bottom: 8px; }
-  .no-offer p { color: #444; font-size: 13px; }
-
-  /* Console Log */
-  .console-panel {
-    margin-top: 24px; background: #0d0d0d;
-    border: 1px solid #222; border-radius: 12px;
-    max-height: 300px; overflow-y: auto;
-  }
-  .console-header {
-    padding: 10px 16px; background: #1a1a1a;
-    border-bottom: 1px solid #222; border-radius: 12px 12px 0 0;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .console-header span { color: #d4af37; font-size: 13px; font-weight: bold; }
-  .console-header button {
-    background: #333; color: #aaa; border: none;
-    padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 11px;
-  }
-  #console-log { padding: 12px 16px; font-family: 'Courier New', monospace; font-size: 11px; }
-  .log-entry { margin-bottom: 4px; padding: 2px 0; border-bottom: 1px solid #111; }
-  .log-info { color: #8ecae6; }
-  .log-success { color: #2ecc71; }
-  .log-warn { color: #f39c12; }
-  .log-error { color: #e74c3c; }
-  .log-data { color: #bb86fc; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#fff;min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #d4af37}
+.header h1{font-size:20px;color:#d4af37}
+.header .logo{font-weight:bold;color:#fff;font-size:14px}
+.warning-bar{background:rgba(243,156,18,0.1);border-bottom:1px solid rgba(243,156,18,0.3);padding:8px 24px;display:flex;align-items:center;gap:8px}
+.warning-bar span{color:#f39c12;font-size:12px}
+.quick-links{background:#111;padding:10px 24px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid #222}
+.quick-links span{color:#666;font-size:11px}
+.quick-links a{color:#d4af37;font-size:11px;text-decoration:none;padding:4px 12px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:4px;transition:all 0.2s}
+.quick-links a:hover{background:rgba(212,175,55,0.2)}
+.quick-links a.active-link{background:#d4af37;color:#1a1a2e;font-weight:bold}
+.persona-bar{background:#16213e;padding:12px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #333}
+.persona-bar label{color:#aaa;font-size:13px}
+.persona-bar select{background:#1a1a2e;color:#d4af37;border:1px solid #d4af37;padding:8px 16px;border-radius:6px;font-size:13px;cursor:pointer;max-width:420px}
+.persona-bar .status{margin-left:auto;font-size:12px;color:#666;padding:6px 12px;border-radius:20px;background:#111}
+.persona-bar .status.connected{color:#2ecc71;border:1px solid #2ecc71}
+.persona-bar .status.loading{color:#f39c12;border:1px solid #f39c12}
+.persona-bar .status.error{color:#e74c3c;border:1px solid #e74c3c}
+.profile-card{background:#111;border:1px solid #222;border-radius:8px;padding:16px 24px;margin:16px auto;max-width:960px;display:flex;gap:24px;flex-wrap:wrap;align-items:center}
+.profile-card .avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#b8860b);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold;color:#1a1a2e}
+.profile-card .info h3{color:#d4af37;font-size:16px;margin-bottom:4px}
+.profile-card .info p{color:#888;font-size:12px}
+.profile-card .tags{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.profile-card .tag{font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid #333;color:#aaa}
+.profile-card .tag.gold{border-color:#d4af37;color:#d4af37}
+.profile-card .tag.silver{border-color:#c0c0c0;color:#c0c0c0}
+.profile-card .tag.active{border-color:#2ecc71;color:#2ecc71}
+.profile-card .tag.inactive{border-color:#e74c3c;color:#e74c3c}
+.page{max-width:960px;margin:0 auto;padding:0 24px 24px}
+.welcome-card{background:linear-gradient(135deg,#16213e,#1a1a2e);border:1px solid #333;border-radius:12px;padding:24px;margin-bottom:24px}
+.welcome-card h2{color:#d4af37;margin-bottom:8px}
+.welcome-card p{color:#aaa;font-size:14px}
+#hero-banner{padding:0;border:2px dashed #333;border-radius:16px;min-height:200px;display:flex;align-items:center;justify-content:center;background:#111;color:#666;font-size:16px;transition:all 0.5s ease;overflow:hidden}
+.offer-card{width:100%;padding:32px;background:linear-gradient(135deg,#1a1a2e 0%,#0d1b2a 50%,#1b2a4a 100%);border-radius:14px;text-align:center;position:relative;overflow:hidden}
+.offer-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(212,175,55,0.05) 0%,transparent 70%);animation:shimmer 3s ease-in-out infinite}
+@keyframes shimmer{0%,100%{transform:rotate(0deg)}50%{transform:rotate(180deg)}}
+.offer-card .badge{display:inline-block;background:linear-gradient(135deg,#d4af37,#b8860b);color:#1a1a2e;font-weight:bold;font-size:11px;padding:4px 16px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.offer-card h2{color:#d4af37;font-size:22px;margin-bottom:8px;position:relative}
+.offer-card .greeting{color:#8ecae6;font-size:15px;margin-bottom:16px}
+.offer-message-box{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:10px;padding:20px;margin:16px 0;position:relative}
+.offer-message-box p{color:#e0e0e0;font-size:15px;line-height:1.6}
+.offer-meta{display:flex;justify-content:center;gap:16px;margin:16px 0;flex-wrap:wrap}
+.offer-meta span{font-size:11px;color:#888;padding:4px 10px;background:rgba(255,255,255,0.05);border-radius:6px}
+.offer-meta span b{color:#d4af37}
+.offer-actions{display:flex;justify-content:center;gap:12px;margin-top:20px}
+.btn-learn{background:linear-gradient(135deg,#d4af37,#b8860b);color:#1a1a2e;font-weight:bold;font-size:14px;padding:12px 32px;border:none;border-radius:8px;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
+.btn-learn:hover{transform:scale(1.05);box-shadow:0 4px 20px rgba(212,175,55,0.4)}
+.btn-close{background:transparent;color:#d4af37;font-size:14px;padding:12px 32px;border:1px solid rgba(212,175,55,0.4);border-radius:8px;cursor:pointer;transition:all 0.2s}
+.btn-close:hover{border-color:#d4af37;background:rgba(212,175,55,0.1)}
+.offer-brand{color:#555;font-size:12px;margin-top:16px}
+.no-offer{text-align:center;padding:40px}
+.no-offer h3{color:#555;margin-bottom:8px}
+.no-offer p{color:#444;font-size:13px}
+.console-panel{margin-top:24px;background:#0d0d0d;border:1px solid #222;border-radius:12px;max-height:300px;overflow-y:auto}
+.console-header{padding:10px 16px;background:#1a1a1a;border-bottom:1px solid #222;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center}
+.console-header span{color:#d4af37;font-size:13px;font-weight:bold}
+.console-header button{background:#333;color:#aaa;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:11px}
+#console-log{padding:12px 16px;font-family:'Courier New',monospace;font-size:11px}
+.log-entry{margin-bottom:4px;padding:2px 0;border-bottom:1px solid #111}
+.log-info{color:#8ecae6}
+.log-success{color:#2ecc71}
+.log-warn{color:#f39c12}
+.log-error{color:#e74c3c}
+.log-data{color:#bb86fc}
 </style>
 </head>
-
 <body>
-
-<!-- Header -->
 <div class="header">
   <h1>&#x1F3E6; LTM AJO Learning</h1>
-  <span class="logo">Platinum Upgrade — Code-Based Experience</span>
+  <span class="logo">Platinum Upgrade &#x2014; Journey + Code-Based Experience</span>
 </div>
-
-<!-- Persona Selector -->
-<div class="persona-bar">
-  <label>Test Persona:</label>
-  <select id="personaSelect" onchange="switchPersona()">
-    <option value="Prof-1001" data-name="Sarah Thompson" data-spend="20000" data-tier="Gold">Sarah Thompson (Prof-1001) — Gold, $20k</option>
-    <option value="Prof-1002" data-name="Rebecca McDonald" data-spend="0" data-tier="Gold">Rebecca McDonald (Prof-1002) — Inactive, $0</option>
-    <option value="Prof-1003" data-name="Priyanka R" data-spend="30000" data-tier="Gold">Priyanka R (Prof-1003) — Gold, $30k</option>
-    <option value="Prof-1004" data-name="Robert Chen" data-spend="5000" data-tier="Silver">Robert Chen (Prof-1004) — Silver, $5k</option>
-    <option value="Prof-1005" data-name="Nick Anderson" data-spend="10000" data-tier="Gold">Nick Anderson (Prof-1005) — Gold, $10k</option>
-  </select>
-  <span id="statusIndicator" class="status">Initializing...</span>
-</div>
-
-<!-- Main Content -->
-<div class="page">
-
-  <!-- Welcome -->
-  <div class="welcome-card">
-    <h2>Welcome to the Platinum Upgrade Experience</h2>
-    <p>This page demonstrates AJO Code-Based Experience with real-time offer decisioning. 
-       Select a persona above and the offer popup below will update dynamically via Web SDK + Decision Policy.</p>
-  </div>
-
-  <!-- Hero Banner — Offer renders here -->
-  <div id="hero-banner">Loading personalized offer...</div>
-
-  <!-- Console Output -->
-  <div class="console-panel">
-    <div class="console-header">
-      <span>&#x1F4CB; Event Console</span>
-      <button onclick="clearConsole()">Clear</button>
-    </div>
-    <div id="console-log"></div>
-  </div>
-
-</div>
-
-<script>
-  // ============================================
-  // CONFIGURATION
-  // ============================================
-  const CONFIG = {
-    datastreamId: "9788be4b-6d69-444b-92e7-481021ea9c34",
-    orgId: "795D95DA5745973C7F000101@AdobeOrg",
-    surface: "web://kaaru-ltm.github.io/ltm-adobe-learning/#hero-banner",
-    debug: true
-  };
-
-  let currentPersona = "1001";
-  let isConfigured = false;
-
-  // ============================================
-  // CUSTOM CONSOLE LOGGER
-  // ============================================
-  function log(message, type = "info", data = null) {
-    const consoleDiv = document.getElementById("console-log");
-    const timestamp = new Date().toLocaleTimeString();
-    const colorClass = `log-${type}`;
-    let html = `<div class="log-entry ${colorClass}">[${timestamp}] ${message}</div>`;
-    if (data) {
-      html += `<div class="log-entry log-data">${JSON.stringify(data, null, 2)}</div>`;
-    }
-    consoleDiv.innerHTML = html + consoleDiv.innerHTML;
-    // Also log to browser console
-    console.log(`[AJO] ${message}`, data || "");
-  }
-
-  function clearConsole() {
-    document.getElementById("console-log").innerHTML = "";
-  }
-
-  function setStatus(text, type) {
-    const el = document.getElementById("statusIndicator");
-    el.textContent = text;
-    el.className = `status ${type}`;
-  }
-
-  // ============================================
-  // SEND DISPLAY EVENT (Proposition Tracking)
-  // ============================================
-  function sendDisplayEvent(proposition) {
-    log("Sending display event (proposition tracking)...", "info");
-    return alloy("sendEvent", {
-      xdm: {
-        eventType: "decisioning.propositionDisplay",
-        _experience: {
-          decisioning: {
-            propositions: [{
-              id: proposition.id,
-              scope: proposition.scope,
-              scopeDetails: proposition.scopeDetails
-            }]
-          }
-        }
-      }
-    }).then(function() {
-      log("Display event sent successfully", "success");
-    }).catch(function(err) {
-      log("Display event failed: " + err.message, "error");
-    });
-  }
-
-  // ============================================
-  // SEND INTERACTION EVENT (Learn More / Close)
-  // ============================================
-  function sendInteractionEvent(eventType, offerData) {
-    const select = document.getElementById("personaSelect");
-    const cid = select.value;
-
-    log(`Sending interaction event: ${eventType} for ${cid}`, "info");
-
-    return alloy("sendEvent", {
-      xdm: {
-        eventType: "application.launch",
-        timestamp: new Date().toISOString(),
-        _mindtree_apac: {
-          customerid: cid,
-          eventType: eventType,
-          offerName: offerData?.offerName || "",
-          channel: "web",
-          timestamp: new Date().toISOString()
-        },
-        identityMap: {
-          crmId: [{
-            id: cid,
-            authenticatedState: "authenticated",
-            primary: true
-          }]
-        }
-      }
-    }).then(function() {
-      log(`Event '${eventType}' sent successfully for ${cid}`, "success");
-    }).catch(function(err) {
-      log(`Event '${eventType}' failed: ${err.message}`, "error");
-    });
-  }
-
-  // ============================================
-  // RENDER OFFER POPUP
-  // ============================================
-  function applyPersonalization(response) {
-    const hero = document.getElementById("hero-banner");
-    const propositions = response?.propositions || [];
-
-    log(`Received ${propositions.length} proposition(s)`, "info");
-
-    if (propositions.length === 0) {
-      hero.innerHTML = `
-        <div class="no-offer">
-          <h3>&#x1F6AB; No Personalized Offer</h3>
-          <p>This profile is not eligible or no propositions returned.</p>
-        </div>`;
-      log("No propositions returned — profile may not be eligible", "warn");
-      return null;
-    }
-
-    const proposition = propositions[0];
-    const item = proposition?.items?.[0];
-    const content = item?.data?.content;
-
-    log("Proposition received:", "success", proposition);
-    log("Content data:", "data", content);
-
-    if (!content) {
-      hero.innerHTML = `
-        <div class="no-offer">
-          <h3>&#x26A0; Content Empty</h3>
-          <p>Proposition received but content is empty.</p>
-        </div>`;
-      log("Content is null/undefined", "warn");
-      return null;
-    }
-
-    // Parse content if it's a string
-    let offerData = (typeof content === "string") ? JSON.parse(content) : content;
-
-    // Handle both flat and nested structures
-    const title = offerData?.offerPopup?.title || offerData?.title || "Exclusive Platinum Offer";
-    const greeting = offerData?.offerPopup?.greeting || offerData?.greeting || "";
-    const message = offerData?.offerPopup?.offer?.message || offerData?.message || "Special offer for you";
-    const offerName = offerData?.offerPopup?.offer?.offerName || offerData?.offerName || "";
-    const offerId = offerData?.offerPopup?.offer?.offerId || offerData?.offerId || "";
-    const offerCode = offerData?.offerCode || offerId || "";
-    const ctaLearn = offerData?.offerPopup?.cta?.learnMore || offerData?.cta || "Learn More";
-    const ctaClose = offerData?.offerPopup?.cta?.close || "Close";
-    const brand = offerData?.offerPopup?.branding?.company || offerData?.brand || "American Express, USA";
-    const minSpend = offerData?.offerPopup?.offer?.minSpend || offerData?.minSpend || "";
-    const maxSpend = offerData?.offerPopup?.offer?.maxSpend || offerData?.maxSpend || offerData?.maxspend || "";
-    const priority = offerData?.offerPopup?.offer?.priority || offerData?.priorityv1 || offerData?.priority || "";
-
-    hero.innerHTML = `
-      <div class="offer-card">
-        <span class="badge">&#x2B50; Platinum Upgrade</span>
-        <h2>${title}</h2>
-        ${greeting ? `<p class="greeting">${greeting}</p>` : ""}
-        <div class="offer-message-box">
-          <p>${message}</p>
-        </div>
-        <div class="offer-meta">
-          ${offerId ? `<span><b>Offer:</b> ${offerId}</span>` : ""}
-          ${offerName ? `<span><b>Name:</b> ${offerName}</span>` : ""}
-          ${offerCode ? `<span><b>Code:</b> ${offerCode}</span>` : ""}
-          ${priority ? `<span><b>Priority:</b> ${priority}</span>` : ""}
-        </div>
-        <div class="offer-actions">
-          <button class="btn-learn" onclick="handleLearnMore()">&#x1F680; ${ctaLearn}</button>
-          <button class="btn-close" onclick="handleClose()">&#x2716; ${ctaClose}</button>
-        </div>
-        <p class="offer-brand">${brand}</p>
-      </div>`;
-
-    // Store offer data globally for interaction events
-    window._currentOffer = { offerName, offerId, message };
-
-    log("Offer rendered successfully!", "success");
-    return proposition;
-  }
-
-  // ============================================
-  // BUTTON HANDLERS
-  // ============================================
-  function handleLearnMore() {
-    const hero = document.getElementById("hero-banner");
-    log("User clicked LEARN MORE", "success");
-
-    sendInteractionEvent("learnMoreClicked", window._currentOffer);
-
-    hero.innerHTML = `
-      <div class="offer-card">
-        <span class="badge" style="background:#2ecc71;color:#fff;">&#x2705; Thank You!</span>
-        <h2>We're preparing your upgrade details</h2>
-        <p class="greeting">You'll receive more information shortly.</p>
-        <div class="offer-message-box">
-          <p>${window._currentOffer?.message || "Your exclusive offer is being processed."}</p>
-        </div>
-        <p class="offer-brand">American Express, USA</p>
-      </div>`;
-  }
-
-  function handleClose() {
-    const hero = document.getElementById("hero-banner");
-    log("User clicked CLOSE", "warn");
-
-    sendInteractionEvent("closeClicked", window._currentOffer);
-
-    hero.innerHTML = `
-      <div class="offer-card">
-        <span class="badge" style="background:#e74c3c;color:#fff;">Dismissed</span>
-        <h2>No worries!</h2>
-        <p class="greeting">You can always explore upgrade options later.</p>
-        <div class="offer-actions" style="margin-top:16px;">
-          <button class="btn-learn" onclick="switchPersona()">&#x1F504; Reload Offer</button>
-        </div>
-        <p class="offer-brand">American Express, USA</p>
-      </div>`;
-  }
-
-  // ============================================
-  // FETCH OFFER (Main Function)
-  // ============================================
-  async function fetchOffer(customerId) {
-    const hero = document.getElementById("hero-banner");
-    hero.innerHTML = "Loading personalized offer...";
-    setStatus("Fetching offer...", "loading");
-
-    log(`Fetching offer for customer: ${customerId}`, "info");
-    log(`Surface: ${CONFIG.surface}`, "info");
-
-    try {
-      const response = await alloy("sendEvent", {
-        renderDecisions: false,
-        personalization: {
-          surfaces: [CONFIG.surface]
-        },
-        xdm: {
-          eventType: "application.launch",
-          timestamp: new Date().toISOString(),
-          _mindtree_apac: {
-            customerid: customerId,
-            eventType: "appOpen",
-            channel: "web",
-            timestamp: new Date().toISOString()
-          },
-          identityMap: {
-            crmId: [{
-              id: customerId,
-              authenticatedState: "authenticated",
-              primary: true
-            }]
-          }
-        }
-      });
-
-      log("sendEvent response received", "success");
-      log("Full response:", "data", response);
-
-      const proposition = applyPersonalization(response);
-
-      if (proposition) {
-        await sendDisplayEvent(proposition);
-        setStatus("Offer loaded ✓", "connected");
-      } else {
-        setStatus("No offer available", "error");
-      }
-
-    } catch (e) {
-      log("Error fetching offer: " + e.message, "error");
-      setStatus("Error", "error");
-      hero.innerHTML = `
-        <div class="no-offer">
-          <h3>&#x274C; Error</h3>
-          <p>${e.message}</p>
-        </div>`;
-    }
-  }
-
-  // ============================================
-  // PERSONA SWITCHER
-  // ============================================
-  async function switchPersona() {
-    const select = document.getElementById("personaSelect");
-    currentPersona = select.value;
-    const name = select.options[select.selectedIndex].dataset.name;
-
-    log(`Switching to persona: ${name} (${currentPersona})`, "info");
-    await fetchOffer(currentPersona);
-  }
-
-  // ============================================
-  // INITIALIZATION
-  // ============================================
-  window.addEventListener("load", async () => {
-    try {
-      log("Initializing Adobe Web SDK...", "info");
-      setStatus("Configuring...", "loading");
-
-      await alloy("configure", {
-        datastreamId: CONFIG.datastreamId,
-        orgId: CONFIG.orgId,
-        debugEnabled: CONFIG.debug
-      });
-
-      isConfigured = true;
-      log("Web SDK configured successfully!", "success");
-      log(`Datastream: ${CONFIG.datastreamId}`, "info");
-      log(`Org: ${CONFIG.orgId}`, "info");
-
-      // Fetch offer for default persona
-      await fetchOffer(currentPersona);
-
-    } catch (e) {
-      log("Initialization error: " + e.message, "error");
-      setStatus("Init failed", "error");
-    }
-  });
-</script>
-
-</body>
-</html>
+<div class="warning-bar">
