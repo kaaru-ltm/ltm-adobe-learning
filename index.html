@@ -87,7 +87,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#fff;min-h
 </div> 
 <div class="quick-links"> 
   <span>Open in new Incognito:</span> 
-  <a href="?cid=Prof-1001" target="_blank" id="link-Prof-1001">Sarah (Prof-1001) &#x2014; Gold $20k</a> 
+  <a href="?cid=pet-9601" target="_blank" id="link-pet-9601">Sarah (pet-9601) &#x2014; Gold $20k</a> 
   <a href="?cid=Prof-1002" target="_blank" id="link-Prof-1002">Rebecca (Prof-1002) &#x2014; Inactive</a> 
   <a href="?cid=Prof-1003" target="_blank" id="link-Prof-1003">Priyanka (Prof-1003) &#x2014; Gold $30k</a> 
   <a href="?cid=Prof-1004" target="_blank" id="link-Prof-1004">Robert (Prof-1004) &#x2014; Silver $5k</a> 
@@ -96,7 +96,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#fff;min-h
 <div class="persona-bar"> 
   <label>Test Persona:</label> 
   <select id="personaSelect" onchange="switchPersona()"> 
-    <option value="Prof-1001">Sarah Thompson (Prof-1001) &#x2014; Gold, $20k, Active</option> 
+    <option value="pet-9601">Sarah Thompson (pet-9601) &#x2014; Gold, $20k, Active</option> 
     <option value="Prof-1002">Rebecca McDonald (Prof-1002) &#x2014; Gold, $0, Inactive</option> 
     <option value="Prof-1003">Priyanka R (Prof-1003) &#x2014; Gold, $30k, Active</option> 
 
@@ -109,7 +109,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#fff;min-h
   <div class="avatar" id="profileAvatar">S</div> 
   <div class="info"> 
     <h3 id="profileName">Sarah Thompson</h3> 
-    <p id="profileDetails">Prof-1001 | karthiksitian@gmail.com | Annual Spend: $20,000</p> 
+    <p id="profileDetails">pet-9601 | test1@ltm.com | Annual Spend: $20,000</p> 
   </div> 
   <div class="tags" id="profileTags"> 
     <span class="tag gold">Gold</span> 
@@ -132,14 +132,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a1a;color:#fff;min-h
 </div> 
 <script> 
 var PERSONAS={ 
-  "Prof-1001":{name:"Sarah Thompson",email:"karthiksitian@gmail.com",tier:"Gold",status:"active",spend:20000}, 
+  "pet-9601":{name:"Sarah Thompson",email:"test1@ltm.com",tier:"Gold",status:"active",spend:20000}, 
   "Prof-1002":{name:"Rebecca McDonald",email:"Karthik.nagarajublr49@gmail.com",tier:"Gold",status:"inactive",spend:0}, 
   "Prof-1003":{name:"Priyanka R",email:"Divya.Ravichandran@ltm.com",tier:"Gold",status:"active",spend:30000}, 
   "Prof-1004":{name:"Robert Chen",email:"Karthik.N6@ltm.com",tier:"Silver",status:"active",spend:5000}, 
   "Prof-1005":{name:"Nick Anderson",email:"divya.ravichandran1@aexp.com",tier:"Gold",status:"active",spend:10000} 
 }; 
 var CONFIG={ 
-  datastreamId:"ca473551-aea6-4bd0-bbf3-3536c3a14a02", 
+  datastreamId:"77321020-af6b-46a7-b26a-7da24e35ecdb", 
   orgId:"795D95DA5745973C7F000101@AdobeOrg", 
   surface:"web://kaaru-ltm.github.io/ltm-adobe-learning/#hero-banner", 
   debug:true 
@@ -148,7 +148,7 @@ var CONFIG={
 function getPersonaFromURL(){ 
   var p=new URLSearchParams(window.location.search); 
   var c=p.get("cid"); 
-  return(c&&PERSONAS[c])?c:"Prof-1001"; 
+  return(c&&PERSONAS[c])?c:"pet-9601"; 
 } 
 
 var currentPersona=getPersonaFromURL(); 
