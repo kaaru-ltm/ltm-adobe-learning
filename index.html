@@ -2,416 +2,181 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<title>AJO Journey CBE Test</title>
+<title>Journey CBE Static Test</title>
 
 <script>
 !function(n,o){o.forEach(function(o){
-  n[o]||(
-    (n.__alloyNS=n.__alloyNS||[]).push(o),
-    n[o]=function(){
-      var u=arguments;
-      return new Promise(function(i,l){
-        n.setTimeout(function(){n[o].q.push([i,l,u])})
-      })
-    },
-    n[o].q=[]
-  )
+  n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),
+  n[o]=function(){
+    var u=arguments;
+    return new Promise(function(i,l){
+      n.setTimeout(function(){n[o].q.push([i,l,u])})
+    })
+  },
+  n[o].q=[])
 })}(window,["alloy"]);
 </script>
 
 <script src="https://cdn1.adoberesources.net/alloy/2.19.1/alloy.js" async></script>
 
 <style>
-body{
-  font-family:monospace;
-  padding:20px;
-  background:#111;
-  color:#0f0;
-  font-size:14px;
-}
-
-h1{
-  color:#0ff;
-  font-size:20px;
-}
-
-.step{
-  margin:8px 0;
-  padding:8px;
-  border-left:3px solid #333;
-}
-
-.ok{
-  border-color:#0f0;
-  color:#0f0;
-}
-
-.wait{
-  border-color:#ff0;
-  color:#ff0;
-}
-
-.err{
-  border-color:#f00;
-  color:#f00;
-}
-
-.data{
-  border-color:#0ff;
-  color:#0ff;
-}
-
-#hero-banner{
-  margin-top:20px;
-  padding:20px;
-  background:#000;
-  border:2px solid #0ff;
-  border-radius:8px;
-  color:#fff;
-}
-
-#hero-banner h2{
-  color:#0ff;
-}
-
-#hero-banner button{
-  padding:10px 18px;
-  background:#0ff;
-  color:#000;
-  border:none;
-  border-radius:4px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-#result{
-  margin-top:20px;
-  padding:16px;
-  background:#000;
-  border:2px solid #0f0;
-  border-radius:8px;
-  white-space:pre-wrap;
-  word-wrap:break-word;
-  max-height:420px;
-  overflow-y:auto;
-}
+body{font-family:monospace;padding:20px;background:#111;color:#0f0}
+h1{color:#0ff}
+.step{margin:6px 0;padding:8px;border-left:3px solid #333}
+.ok{border-color:#0f0}
+.err{border-color:#f00}
+.wait{border-color:#ff0}
+.data{border-color:#0ff}
+#hero-banner{margin-top:20px;padding:20px;border:2px solid #0ff;background:#000;color:#fff}
+#result{margin-top:20px;padding:10px;background:#000;color:#fff;white-space:pre-wrap}
 </style>
 </head>
 
 <body>
 
-<h1>AJO Journey + Code-Based Experience Test</h1>
-
+<h1>Journey CBE Static Test</h1>
 <div id="log"></div>
-
-<div id="hero-banner">
-  Waiting for Journey CBE content...
-</div>
-
-<div id="result">
-  Waiting...
-</div>
+<div id="hero-banner">Waiting for content...</div>
+<div id="result">Waiting...</div>
 
 <script>
-/*
-  IMPORTANT:
-  For Journey-based CBE, identity namespace must match the AJO Event configuration.
-  Your Journey setup shows namespace = crmId.
-*/
 
 var CONFIG = {
   datastreamId: "9788be4b-6d69-444b-92e7-481021ea9c34",
   orgId: "795D95DA5745973C7F000101@AdobeOrg",
   surface: "web://kaaru-ltm.github.io/ltm-adobe-learning/#hero-banner",
 
-  // ✅ Journey event namespace from your AJO event config
-  identityNamespace: "crmId"
+  // ✅ Correct namespace (from your AJO event config)
+  identityNamespace: "crmid"
 };
 
-var cid = new URLSearchParams(window.location.search).get("cid") || "Prof-1001";
+// Static CBE → cid only required for journey entry
+var cid = "Prof-9901";
 
 function log(msg, cls){
   cls = cls || "step";
-  var d = document.getElementById("log");
   var t = new Date().toLocaleTimeString();
-  d.innerHTML += '<div class="step '+cls+'">['+t+'] '+msg+'</div>';
-  console.log("[AJO-CBE]", msg);
+  document.getElementById("log").innerHTML +=
+    '<div class="step '+cls+'">['+t+'] '+msg+'</div>';
+  console.log("[CBE]", msg);
 }
 
 function showResult(data){
-  document.getElementById("result").textContent = JSON.stringify(data, null, 2);
-}
-
-function wait(ms){
-  return new Promise(function(resolve){
-    setTimeout(resolve, ms);
-  });
+  document.getElementById("result").textContent = JSON.stringify(data,null,2);
 }
 
 function getIdentityMap(){
-  var identityMap = {};
-  identityMap[CONFIG.identityNamespace] = [{
+  var map = {};
+  map[CONFIG.identityNamespace] = [{
     id: cid,
     authenticatedState: "authenticated",
     primary: true
   }];
-  return identityMap;
+  return map;
 }
 
 function renderHero(content){
-  var hero = document.getElementById("hero-banner");
+  if(typeof content === "string"){
+    try{ content = JSON.parse(content); }catch(e){}
+  }
 
   if(!content){
-    hero.innerHTML = "<h2>No content returned</h2><p>Journey CBE did not return content.</p>";
+    document.getElementById("hero-banner").innerHTML = "No content";
     return;
   }
 
-  if(typeof content === "string"){
-    try{
-      content = JSON.parse(content);
-    }catch(e){
-      hero.innerHTML = "<pre>"+content+"</pre>";
-      return;
-    }
-  }
-
-  hero.innerHTML =
-    "<h2>"+(content.title || "Journey CBE Content")+"</h2>" +
-    "<p><strong>"+(content.greeting || "")+"</strong></p>" +
-    "<p>"+(content.message || "")+"</p>" +
-    "<p>Offer ID: "+(content.offerId || "")+"</p>" +
-    "<p>Offer Name: "+(content.offerName || "")+"</p>" +
-    "<p>Brand: "+(content.brand || "")+"</p>" +
-    "<button id='ctaBtn'>"+(content.cta || "Learn More")+"</button>";
-
-  var btn = document.getElementById("ctaBtn");
-  if(btn){
-    btn.addEventListener("click", function(){
-      sendInteractionEvent("learnMoreClicked");
-    });
-  }
+  document.getElementById("hero-banner").innerHTML =
+    "<h2>"+(content.title||"")+"</h2>"+
+    "<p>"+(content.greeting||"")+"</p>"+
+    "<p>"+(content.message||"")+"</p>"+
+    "<button>"+(content.cta||"Learn More")+"</button>";
 }
 
-/*
-  STEP 1:
-  Trigger the AJO Journey entry event.
-  This should match KA_AppOpenEvent:
-  _mindtree_apac.eventType == "appOpen"
-*/
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
 async function triggerJourney(){
-  log("STEP 1: Triggering Journey for profile "+cid, "wait");
+  log("Triggering Journey...","wait");
 
-  var resp = await alloy("sendEvent", {
-    renderDecisions: false,
-    xdm: {
-      eventType: "application.launch",
-      timestamp: new Date().toISOString(),
-
-      _mindtree_apac: {
-        customerid: cid,
-        eventType: "appOpen",
-        channel: "web",
-        timestamp: new Date().toISOString()
+  await alloy("sendEvent",{
+    xdm:{
+      eventType:"application.launch",
+      timestamp:new Date().toISOString(),
+      _mindtree_apac:{
+        customerid:cid,
+        eventType:"appOpen",
+        channel:"web",
+        timestamp:new Date().toISOString()
       },
-
-      identityMap: getIdentityMap()
+      identityMap:getIdentityMap()
     }
   });
 
-  log("Journey trigger event sent", "ok");
-  console.log("Journey trigger response:", resp);
-  return resp;
+  log("Journey triggered","ok");
 }
 
-/*
-  STEP 2:
-  Fetch CBE content from Journey surface.
+async function fetchCBE(){
+  log("Fetching CBE content...","wait");
 
-  Adobe sample for code-based experience uses:
-  alloy("sendEvent", {
-    renderDecisions: true,
-    personalization: { surfaces: [...] }
-  })
-
-  renderDecisions:true is important for fetching decision/proposition content.
-*/
-async function fetchJourneyCBE(){
-  log("STEP 2: Fetching Journey CBE content from surface", "wait");
-
-  var resp = await alloy("sendEvent", {
-    renderDecisions: true,
-    personalization: {
-      surfaces: [CONFIG.surface]
-    },
-    xdm: {
-      eventType: "decisioning.propositionFetch",
-      timestamp: new Date().toISOString(),
-
-      _mindtree_apac: {
-        customerid: cid,
-        eventType: "appOpen",
-        channel: "web",
-        timestamp: new Date().toISOString()
-      },
-
-      identityMap: getIdentityMap()
+  var resp = await alloy("sendEvent",{
+    renderDecisions:true,
+    personalization:{ surfaces:[CONFIG.surface] },
+    xdm:{
+      eventType:"decisioning.propositionFetch",
+      timestamp:new Date().toISOString(),
+      identityMap:getIdentityMap()
     }
   });
 
-  console.log("Journey CBE fetch response:", resp);
-
-  var props = (resp && resp.propositions) || [];
-  var decisions = (resp && resp.decisions) || [];
-
-  log("Propositions received: "+props.length, "data");
-  log("Decisions received: "+decisions.length, "data");
-
-  return resp;
-}
-
-function extractContent(resp){
-  var props = (resp && resp.propositions) || [];
-
-  if(props.length === 0){
-    return null;
-  }
-
-  var proposition = props[0];
-  var item = proposition.items && proposition.items[0];
-
-  if(!item){
-    return null;
-  }
-
-  var content = item.data && item.data.content;
-
-  return {
-    proposition: proposition,
-    content: content
-  };
-}
-
-/*
-  Display event tracking.
-  Adobe documentation says display events for code-based journeys/campaigns
-  must be manually sent.
-*/
-async function sendDisplayEvent(proposition){
-  if(!proposition){
-    return;
-  }
-
-  await alloy("sendEvent", {
-    xdm: {
-      eventType: "decisioning.propositionDisplay",
-      _experience: {
-        decisioning: {
-          propositions: [{
-            id: proposition.id,
-            scope: proposition.scope,
-            scopeDetails: proposition.scopeDetails
-          }]
-        }
-      }
-    }
-  });
-
-  log("Display event sent", "ok");
-}
-
-/*
-  Interaction event tracking.
-*/
-async function sendInteractionEvent(actionType){
-  log("Sending interaction event: "+actionType, "wait");
-
-  await alloy("sendEvent", {
-    xdm: {
-      eventType: "application.launch",
-      timestamp: new Date().toISOString(),
-
-      _mindtree_apac: {
-        customerid: cid,
-        eventType: actionType,
-        channel: "web",
-        timestamp: new Date().toISOString()
-      },
-
-      identityMap: getIdentityMap()
-    }
-  });
-
-  log("Interaction event sent: "+actionType, "ok");
+  console.log("Full response:", resp);
+  var props = (resp && resp.propositions)||[];
+  log("Propositions: "+props.length, "data");
+  return {resp, props};
 }
 
 async function run(){
   try{
-    log("Profile: "+cid, "data");
-    log("Datastream: "+CONFIG.datastreamId, "data");
-    log("Surface: "+CONFIG.surface, "data");
-    log("Identity namespace: "+CONFIG.identityNamespace, "data");
+    log("Profile (journey entry only): "+cid,"data");
+    log("Namespace: "+CONFIG.identityNamespace,"data");
+    log("Configuring Web SDK...","wait");
 
-    log("Initializing Web SDK...", "wait");
-
-    await alloy("configure", {
-      datastreamId: CONFIG.datastreamId,
-      orgId: CONFIG.orgId,
-      debugEnabled: true
+    await alloy("configure",{
+      datastreamId:CONFIG.datastreamId,
+      orgId:CONFIG.orgId,
+      debugEnabled:true
     });
 
-    log("SDK Configured", "ok");
+    log("SDK Configured","ok");
 
-    // Step 1: Trigger Journey
     await triggerJourney();
-
-    // Small wait before fetching inbound CBE
-    log("Waiting before fetching Journey CBE...", "wait");
+    log("Waiting 3 sec for journey to reach CBE step...","wait");
     await wait(3000);
 
-    // Step 2: Fetch CBE
-    var resp = await fetchJourneyCBE();
-    var extracted = extractContent(resp);
+    var {resp, props} = await fetchCBE();
 
-    if(!extracted){
-      log("Retry 1 after 5 seconds", "wait");
+    if(props.length===0){
+      log("Retry after 5s","wait");
       await wait(5000);
-      resp = await fetchJourneyCBE();
-      extracted = extractContent(resp);
+      ({resp, props} = await fetchCBE());
     }
 
-    if(!extracted){
-      log("Retry 2 after 10 seconds", "wait");
-      await wait(10000);
-      resp = await fetchJourneyCBE();
-      extracted = extractContent(resp);
-    }
-
-    if(extracted){
-      log("SUCCESS: Journey CBE content received", "ok");
-
-      renderHero(extracted.content);
+    if(props.length>0){
+      log("✅ SUCCESS","ok");
+      var item = props[0].items && props[0].items[0];
+      var content = item && item.data && item.data.content;
+      renderHero(content);
       showResult(resp);
-
-      await sendDisplayEvent(extracted.proposition);
-    }else{
-      log("No Journey CBE content returned", "err");
+    } else {
+      log("❌ No content","err");
       showResult(resp);
-
-      document.getElementById("hero-banner").innerHTML =
-        "<h2>No Journey CBE Content</h2>" +
-        "<p>The page reached Adobe Edge, but no Journey proposition was returned.</p>" +
-        "<p>Check Journey Live View, identity namespace, surface URI, and journey publication status.</p>";
     }
 
   }catch(e){
-    log("ERROR: "+e.message, "err");
-    console.error(e);
-    showResult({error:e.message});
+    log("ERROR: "+e.message,"err");
   }
 }
 
 window.addEventListener("load", run);
-</script>
 
+</script>
 </body>
 </html>
