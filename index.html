@@ -1,182 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
+ 
 <head>
-<meta charset="UTF-8"/>
-<title>Journey CBE Static Test</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LTM Custom Github webpages</title>
+ 
+  <!-- Adobe Web SDK base code -->
 <script>
-!function(n,o){o.forEach(function(o){
-  n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),
-  n[o]=function(){
-    var u=arguments;
-    return new Promise(function(i,l){
-      n.setTimeout(function(){n[o].q.push([i,l,u])})
-    })
-  },
-  n[o].q=[])
-})}(window,["alloy"]);
+    !function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),n[o]=function(){var u=arguments;return new Promise(function(i,l){n.setTimeout(function(){n[o].q.push([i,l,u])})})},n[o].q=[])})}(window,["alloy"]);
 </script>
-
+ 
+  <!-- Adobe Web SDK library -->
 <script src="https://cdn1.adoberesources.net/alloy/2.19.1/alloy.js" async></script>
-
-<style>
-body{font-family:monospace;padding:20px;background:#111;color:#0f0}
-h1{color:#0ff}
-.step{margin:6px 0;padding:8px;border-left:3px solid #333}
-.ok{border-color:#0f0}
-.err{border-color:#f00}
-.wait{border-color:#ff0}
-.data{border-color:#0ff}
-#hero-banner{margin-top:20px;padding:20px;border:2px solid #0ff;background:#000;color:#fff}
-#result{margin-top:20px;padding:10px;background:#000;color:#fff;white-space:pre-wrap}
+ 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: #f5f5f5;
+    }
+ 
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+ 
+    #hero-banner {
+      margin-top: 20px;
+      padding: 24px;
+      border: 2px dashed #999;
+      border-radius: 12px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      background: #fafafa;
+    }
 </style>
 </head>
-
+ 
 <body>
-
-<h1>Journey CBE Static Test</h1>
-<div id="log"></div>
-<div id="hero-banner">Waiting for content...</div>
-<div id="result">Waiting...</div>
-
-<script>
-
-var CONFIG = {
-  datastreamId: "9788be4b-6d69-444b-92e7-481021ea9c34",
-  orgId: "795D95DA5745973C7F000101@AdobeOrg",
-  surface: "web://kaaru-ltm.github.io/ltm-adobe-learning/#hero-banner",
-
-  // ✅ Correct namespace (from your AJO event config)
-  identityNamespace: "crmid"
-};
-
-// Static CBE → cid only required for journey entry
-var cid = "Prof-9901";
-
-function log(msg, cls){
-  cls = cls || "step";
-  var t = new Date().toLocaleTimeString();
-  document.getElementById("log").innerHTML +=
-    '<div class="step '+cls+'">['+t+'] '+msg+'</div>';
-  console.log("[CBE]", msg);
-}
-
-function showResult(data){
-  document.getElementById("result").textContent = JSON.stringify(data,null,2);
-}
-
-function getIdentityMap(){
-  var map = {};
-  map[CONFIG.identityNamespace] = [{
-    id: cid,
-    authenticatedState: "authenticated",
-    primary: true
-  }];
-  return map;
-}
-
-function renderHero(content){
-  if(typeof content === "string"){
-    try{ content = JSON.parse(content); }catch(e){}
-  }
-
-  if(!content){
-    document.getElementById("hero-banner").innerHTML = "No content";
-    return;
-  }
-
-  document.getElementById("hero-banner").innerHTML =
-    "<h2>"+(content.title||"")+"</h2>"+
-    "<p>"+(content.greeting||"")+"</p>"+
-    "<p>"+(content.message||"")+"</p>"+
-    "<button>"+(content.cta||"Learn More")+"</button>";
-}
-
-function wait(ms){return new Promise(r=>setTimeout(r,ms));}
-
-async function triggerJourney(){
-  log("Triggering Journey...","wait");
-
-  await alloy("sendEvent",{
-    xdm:{
-      eventType:"application.launch",
-      timestamp:new Date().toISOString(),
-      _mindtree_apac:{
-        customerid:cid,
-        eventType:"appOpen",
-        channel:"web",
-        timestamp:new Date().toISOString()
-      },
-      identityMap:getIdentityMap()
+ 
+  <div class="page">
+<h1>LTM Adobe Learning</h1>
+<p>This page is ready for an AJO code-based experience surface.</p>
+ 
+    <!-- Surface -->
+<div id="hero-banner">Default Hero Banner Content</div>
+</div>
+ 
+  <script>
+    const surface = "web://kaaru-ltm.github.io/ltm-adobe-learning/#hero-banner";
+ 
+    function sendDisplayEvent(proposition) {
+      const { id, scope, scopeDetails = {} } = proposition;
+ 
+      return alloy("sendEvent", {
+        xdm: {
+          eventType: "decisioning.propositionDisplay",
+          _experience: {
+            decisioning: {
+              propositions: [
+                {
+                  id,
+                  scope,
+                  scopeDetails
+                }
+              ]
+            }
+          }
+        }
+      });
     }
-  });
-
-  log("Journey triggered","ok");
-}
-
-async function fetchCBE(){
-  log("Fetching CBE content...","wait");
-
-  var resp = await alloy("sendEvent",{
-    renderDecisions:true,
-    personalization:{ surfaces:[CONFIG.surface] },
-    xdm:{
-      eventType:"decisioning.propositionFetch",
-      timestamp:new Date().toISOString(),
-      identityMap:getIdentityMap()
+ 
+    function applyPersonalization(response) {
+      const hero = document.getElementById("hero-banner");
+      if (!hero) return [];
+ 
+      const propositions = response?.propositions || [];
+      const rendered = [];
+ 
+      for (const proposition of propositions) {
+        const items = proposition.items || [];
+ 
+        const htmlItem = items.find(item =>
+          item.schema === "https://ns.adobe.com/personalization/html-content-item" ||
+          Boolean(item.data?.content)
+        );
+ 
+        if (htmlItem) {
+          const content = htmlItem.data?.content || htmlItem.content || "";
+ 
+          if (content) {
+            hero.innerHTML = content;
+            rendered.push(proposition);
+            break;
+          }
+        }
+      }
+ 
+      return rendered;
     }
-  });
-
-  console.log("Full response:", resp);
-  var props = (resp && resp.propositions)||[];
-  log("Propositions: "+props.length, "data");
-  return {resp, props};
-}
-
-async function run(){
-  try{
-    log("Profile (journey entry only): "+cid,"data");
-    log("Namespace: "+CONFIG.identityNamespace,"data");
-    log("Configuring Web SDK...","wait");
-
-    await alloy("configure",{
-      datastreamId:CONFIG.datastreamId,
-      orgId:CONFIG.orgId,
-      debugEnabled:true
+ 
+    window.addEventListener("load", async () => {
+      try {
+        await alloy("configure", {
+          datastreamId: "05f47576-a9ad-44fd-b5bd-3064f60af590",
+          orgId: "795D95DA5745973C7F000101@AdobeOrg",
+          debugEnabled: true
+        });
+ 
+        const response = await alloy("sendEvent", {
+          renderDecisions: true,
+          personalization: {
+            surfaces: [surface],
+            sendDisplayEvent: false
+          },
+          xdm: {
+            web: {
+              webPageDetails: {
+                name: "home",
+                URL: window.location.href
+              }
+            }
+          }
+        });
+ 
+        const renderedPropositions = applyPersonalization(response);
+ 
+        for (const proposition of renderedPropositions) {
+          await sendDisplayEvent(proposition);
+        }
+ 
+      } catch (error) {
+        console.error("Web SDK error:", error);
+      }
     });
-
-    log("SDK Configured","ok");
-
-    await triggerJourney();
-    log("Waiting 3 sec for journey to reach CBE step...","wait");
-    await wait(3000);
-
-    var {resp, props} = await fetchCBE();
-
-    if(props.length===0){
-      log("Retry after 5s","wait");
-      await wait(5000);
-      ({resp, props} = await fetchCBE());
-    }
-
-    if(props.length>0){
-      log("✅ SUCCESS","ok");
-      var item = props[0].items && props[0].items[0];
-      var content = item && item.data && item.data.content;
-      renderHero(content);
-      showResult(resp);
-    } else {
-      log("❌ No content","err");
-      showResult(resp);
-    }
-
-  }catch(e){
-    log("ERROR: "+e.message,"err");
-  }
-}
-
-window.addEventListener("load", run);
-
 </script>
+ 
 </body>
 </html>
